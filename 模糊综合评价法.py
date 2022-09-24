@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Auther : ZhangYiLong
+# Mail : 503302425@qq.com
 # Date : 2022/9/23 20:00
 # File : 模糊综合评价法.py
 import pandas as pd
