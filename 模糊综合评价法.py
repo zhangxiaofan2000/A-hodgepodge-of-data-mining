@@ -92,22 +92,26 @@ class FuzzyEvaluation():
     def S1(self,S):
         '''
         最大隶属原则
-        对评判向量S 分析做综合评论
+        最大值对应元素为为综合评价结果
         :param S:
-        :return:
+        :return: 最大值 ， 最大值下标
         '''
-        return max(S)
+        return max(S.tolist()[0]),S.tolist()[0].index(max(S.tolist()[0]))
 
 
     def S2(self,S,k):
         '''
-        加权平均原则
+        加权平均原则，结果离谁近就是哪个等级
         :param S:评判向量S
         :param k:待定系数
-        :return:
+        :return:综合评价结果，各等级赋值
         '''
+        u=10/sum([i for i in range(1,S.shape[1]+1) ])
+        U = [u*i for i in range(1,S.shape[1]+1) ]
+        M= np.sum(np.multiply(U,S**k))/np.sum(S**k)
+        a = abs(np.subtract(U, M))
 
-        return sum(W*10*S**k)/sum(S**k)
+        return M,np.unravel_index(np.argmin(a), a.shape)[0]
 
 
 def ViewMissingValues():
@@ -134,8 +138,7 @@ if __name__ == '__main__':
     data = df[columns].copy()
     data.dropna()
     # 评价城市的水质类别
-    targets = '城市'
-    data[targets].unique()
+    targets = '断面名称'
 
     #标签
     labels = ['劣Ⅴ', 'Ⅴ', 'Ⅳ', 'Ⅲ', 'Ⅱ', 'Ⅰ']
@@ -182,30 +185,41 @@ if __name__ == '__main__':
     for i in bins_columns:
         data.loc[:,i]=pd.cut(x=data[i], bins=bins_set[i], right=False, labels=labels, retbins=False)
 
-    # 确定评价矩阵R
-    # 初始化评价矩阵R
-    R_matrix = pd.DataFrame(index=bins_columns, columns=labels)
+    data['水质类别(模糊评测)']=None
 
-    for col in bins_columns:
-        # 次数统计
-        A = data[data['城市'] == '盘锦市'][col].value_counts() / len(data[data['城市'] == '盘锦市'])
+    #对每一个目标进行模糊预测
+    for t in data[targets].unique():
+        # 确定评价矩阵R
+        # 初始化评价矩阵R
+        R_matrix = pd.DataFrame(data=None,index=bins_columns, columns=labels)
+        index = data[data[targets] == t].index
+        for col in bins_columns:
+            # 次数统计
+            A = data[data[targets] == t][col].value_counts() / len(data[data[targets] == t])
 
-        for i in labels:
-            R_matrix.loc[col, i] = A.loc[i]
-    #权重向量(权重相加为1) (此处为平均)
-    W = np.matrix([0.2,0.2,0.2,0.2,0.2,0.2])
+            for i in labels:
+                R_matrix.loc[col, i] = A.loc[i]
+        #权重向量(权重相加为1) (此处为平均)
+        W = np.matrix([0.2,0.2,0.2,0.2,0.2,0.2])
 
-    #综合评价矩阵
-    R = np.matrix(R_matrix.values)
-    B = FuzzyEvaluation().M3(W, R)
+        #综合评价矩阵
+        R = np.matrix(R_matrix.values)
+        B = FuzzyEvaluation().M3(W, R)
+
+        # # 最大隶属原则
+        # _,ans = FuzzyEvaluation().S1(B)
+
+        # 加权平均原则
+        _, ans= FuzzyEvaluation().S2(B,k=2)
+
+        # 赋值
+        data.loc[index,'水质类别(模糊评测)'] = labels[ans]
 
 
+    columns=['省份', '城市', '河流', '流域', '断面名称', '监测时间', '水质类别','水质类别(模糊评测)','水温', 'pH',
+           '溶解氧',  '高锰酸钾', '氨氮',  '总磷','总氮'	,'电导率','浊度']
+    data = data[columns]
 
-
-
-
-    # R = np.matrix([[0.5,0.3,0.2,0],[0.3,0.4,0.2,0.1],[0.2,0.2,0.3,0.3]])
-    # W = np.matrix([0.3,0.3,0.4])
-    # ans  = FuzzyEvaluation().M4(W,R)
+    data.to_excel('./data/output.xlsx')
 
 
