@@ -134,6 +134,7 @@ def sortArray(size:int,order:str,algorithm:str,outputfile:str):
             spend_time = time.perf_counter()-start_time
             res = f'{algorithm},{size},{order},{spend_time},second'
             return res
+
         if fun == 2:
             start_time = time.perf_counter()
             bubbleSort(array)
