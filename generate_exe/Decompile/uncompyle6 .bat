@@ -1,0 +1,1 @@
+uncompyle6 test.pyc > test.py
