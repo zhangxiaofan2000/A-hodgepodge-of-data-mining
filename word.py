@@ -80,7 +80,7 @@ def find_table_return_table(file_name,name):
     :param name: 要找的字段
     :return: table
     '''
-    document = Document(f'{path}\{file_name}')
+    document = Document(f'G:\proprocess\data\年报WORD9\{file_name}')
 
     # 放找到的表格
     tables=[]
@@ -141,11 +141,11 @@ if __name__ =="__main__":
 
 
     start = time.perf_counter()
-    task = list(os.listdir(path))
+    task = list(os.listdir("G:\proprocess\data\年报WORD9"))
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
 
         results = executor.map(run_2,task)
-        for result in results:
-            print(result)
+        # for result in results:
+        #     print(result)
     print("多线程",time.perf_counter()-start)
