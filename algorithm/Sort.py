@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Auther :
 # Mail :
-# Date : 2022/10/13 19:37
+# Date : 2022/10/13 20:37
 # File : Sort.py
 
 
 import random
 import time
+import sys
+import numpy as np
+sys.setrecursionlimit(3000)  # 将默认的递归深度修改为3000
 
 def insertionSort(A):
     '''
@@ -108,7 +111,7 @@ def sortArray(size:int,order:str,algorithm:str,outputfile:str):
 
     order_set = {'Ascending':[i for i in range(size)],
                  'Descending':[size-i for i in range(size)],
-                 'Random':random.shuffle([size-i for i in range(size)]),
+                 'Random':np.random.randint(0,size,size=size),
                  }
     algorithm_set = {'insertionSort':0,
                  'quickSort':1,
@@ -149,13 +152,13 @@ def sortArray(size:int,order:str,algorithm:str,outputfile:str):
 
 
 if __name__ == '__main__':
-
-    a = ['insertionSort','quickSort','bubbleSort']
+    now = time.perf_counter()
+    a = ['insertionSort','bubbleSort','quickSort']
     b = ['Ascending','Descending','Random']
-
     for i in a:
         for j in b:
             res_list = []
-            for s in [10,100,1000,10000,100000]:
+            for s in [10,100,1000,10000]:
                 res_list.append(sortArray(s,j,i,outputfile=i))
             to_txt(i+'_'+j, res_list)
+    print('运行时间',time.perf_counter()-now)

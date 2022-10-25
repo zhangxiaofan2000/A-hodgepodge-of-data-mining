@@ -126,22 +126,23 @@ def word_table_to_excel(tables,output):
 
 
 if __name__ =="__main__":
-
+    #
     path = 'G:\proprocess\data\年报WORD'
     path = 'G:\proprocess\data\年报WORD9'
 
     output_path = 'G:\proprocess\data\output'
-
-    # for file_name in os.listdir(path):
-    #     word_find(file_name, '环境保护')
-    # all_list = word_find('000028-国药一致-2020年年度报告.docx', '废气监测方案')
-
-    # # 寻找表头含有 '排放浓度' 的文件
-    # filelist = find_all_file(path,'排放浓度')
-
     #
-    for file_name in tqdm(os.listdir(path)):
-        tables = find_table_return_table(file_name,'排放浓度')
-
-        if len(tables)>0:
-            word_table_to_excel(tables, f'{output_path}\{file_name}.xlsx')
+    # # for file_name in os.listdir(path):
+    # #     word_find(file_name, '环境保护')
+    # # all_list = word_find('000028-国药一致-2020年年度报告.docx', '废气监测方案')
+    #
+    # # # 寻找表头含有 '排放浓度' 的文件
+    # # filelist = find_all_file(path,'排放浓度')
+    #
+    # #
+    # for file_name in tqdm(os.listdir(path)):
+    #     tables = find_table_return_table(file_name,'排放浓度')
+    #
+    #     if len(tables)>0:
+    #         word_table_to_excel(tables, f'{output_path}\{file_name}.xlsx')
+    tables = find_table_return_table(r"D:\Documents\WeChat Files\wxid_30g1qqe35sbf22\FileStorage\File\2022-10",'排放浓度')

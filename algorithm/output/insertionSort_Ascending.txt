@@ -1,0 +1,4 @@
+insertionSort,10,Ascending,3.0999945010989904e-06,second
+insertionSort,100,Ascending,1.09999964479357e-05,second
+insertionSort,1000,Ascending,0.00011549999908311293,second
+insertionSort,10000,Ascending,0.0011899000019184314,second
