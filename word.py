@@ -78,7 +78,11 @@ def find_table_return_table(file_name,name):
     :return: table
     '''
     document = Document(f'{path}\{file_name}')
+
+    # 放找到的表格
     tables=[]
+
+    table_last_row_first_value = ""
     flag=0
     columns_num=0
     for table in document.tables:
@@ -92,16 +96,23 @@ def find_table_return_table(file_name,name):
                             flag = 1
                             tables.append(table)
 
-                columns_num = len(row.cells)
-
-
-
-        elif flag == 1 and columns_num==len(table.columns):
-
-            for row in table.rows:
-                for cell in row.cells:
-                    tables.append(table)
             columns_num = len(row.cells)
+            table_last_row_first_value = row.cells[0]
+
+            print("最后一行columns_num   =  ",columns_num)
+
+
+        # 找到
+        elif flag == 1 and columns_num==len(table.columns):
+            print("下一个表格columns_num   =  ", table.columns)
+            print("第一行第一个值   =  ", table.rows[0].cells[0].text,type(table.rows[0].cells[0].text))
+
+            if table.rows[0].cells[0] == "":
+                table.rows[0].cells[0].text = table_last_row_first_value
+            tables.append(table)
+
+
+
 
 
     return  tables
@@ -125,6 +136,8 @@ def word_table_to_excel(tables,output):
     return df
 
 
+
+
 if __name__ =="__main__":
     #
     path = 'G:\proprocess\data\年报WORD'
@@ -145,4 +158,7 @@ if __name__ =="__main__":
     #
     #     if len(tables)>0:
     #         word_table_to_excel(tables, f'{output_path}\{file_name}.xlsx')
-    tables = find_table_return_table(r"D:\Documents\WeChat Files\wxid_30g1qqe35sbf22\FileStorage\File\2022-10",'排放浓度')
+    file_name = "603259_2018(1).docx"
+    tables = find_table_return_table(r"603259_2018(1).docx",'排放浓度')
+    if len(tables) > 0:
+        word_table_to_excel(tables, f'{output_path}\{file_name}.xlsx')
