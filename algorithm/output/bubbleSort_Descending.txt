@@ -1,0 +1,4 @@
+bubbleSort,10,Descending,1.1600001016631722e-05,second
+bubbleSort,100,Descending,0.0007265000022016466,second
+bubbleSort,1000,Descending,0.09175099999993108,second
+bubbleSort,10000,Descending,9.23551910000242,second

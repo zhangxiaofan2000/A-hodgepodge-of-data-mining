@@ -1,0 +1,4 @@
+bubbleSort,10,Random,2.010000025620684e-05,second
+bubbleSort,100,Random,0.0014554000008502044,second
+bubbleSort,1000,Random,0.15144539999892004,second
+bubbleSort,10000,Random,15.94251179999992,second

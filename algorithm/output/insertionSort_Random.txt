@@ -1,0 +1,4 @@
+insertionSort,10,Random,1.2500000593718141e-05,second
+insertionSort,100,Random,0.0006524999989778735,second
+insertionSort,1000,Random,0.0664692999998806,second
+insertionSort,10000,Random,6.471911700005876,second

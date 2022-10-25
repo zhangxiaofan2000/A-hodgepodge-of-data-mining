@@ -1,0 +1,3 @@
+quickSort,10,Descending,1.630000042496249e-05,second
+quickSort,100,Descending,0.0003524999992805533,second
+quickSort,1000,Descending,0.032738900001277216,second

@@ -1,0 +1,3 @@
+quickSort,10,Ascending,1.7099999240599573e-05,second
+quickSort,100,Ascending,0.0002829000004567206,second
+quickSort,1000,Ascending,0.02261059999727877,second
