@@ -6,6 +6,9 @@ from docx import Document
 import difflib
 from tqdm import tqdm
 import pandas as pd
+import time
+import concurrent.futures
+
 
 def word_find(file_name,name):
 
@@ -83,34 +86,26 @@ def find_table_return_table(file_name,name):
     tables=[]
 
     table_last_row_first_value = ""
-    flag=0
+    flag= False
     columns_num=0
     for table in document.tables:
-
         if flag == 0:
-
             for i, row in enumerate(table.rows):
                 if i == 0:
                     for cell in row.cells:
                         if cell.text == name:
-                            flag = 1
+                            flag = True
                             tables.append(table)
 
             columns_num = len(row.cells)
-            table_last_row_first_value = row.cells[0]
-
-            print("最后一行columns_num   =  ",columns_num)
 
 
+        elif flag and columns_num!=len(table.columns):
+            return tables
         # 找到
-        elif flag == 1 and columns_num==len(table.columns):
-            print("下一个表格columns_num   =  ", table.columns)
-            print("第一行第一个值   =  ", table.rows[0].cells[0].text,type(table.rows[0].cells[0].text))
+        elif flag and columns_num==len(table.columns):
 
-            if table.rows[0].cells[0] == "":
-                table.rows[0].cells[0].text = table_last_row_first_value
             tables.append(table)
-
 
 
 
@@ -135,30 +130,22 @@ def word_table_to_excel(tables,output):
     df.to_excel(output,index=False)
     return df
 
-
+def run_2(file_name):
+    tables = find_table_return_table(file_name, '排放浓度')
+    if len(tables) > 0:
+        word_table_to_excel(tables, f'G:\proprocess\data\output2\{file_name}.xlsx')
 
 
 if __name__ =="__main__":
-    #
-    path = 'G:\proprocess\data\年报WORD'
-    path = 'G:\proprocess\data\年报WORD9'
 
-    output_path = 'G:\proprocess\data\output'
-    #
-    # # for file_name in os.listdir(path):
-    # #     word_find(file_name, '环境保护')
-    # # all_list = word_find('000028-国药一致-2020年年度报告.docx', '废气监测方案')
-    #
-    # # # 寻找表头含有 '排放浓度' 的文件
-    # # filelist = find_all_file(path,'排放浓度')
-    #
-    # #
-    # for file_name in tqdm(os.listdir(path)):
-    #     tables = find_table_return_table(file_name,'排放浓度')
-    #
-    #     if len(tables)>0:
-    #         word_table_to_excel(tables, f'{output_path}\{file_name}.xlsx')
-    file_name = "603259_2018(1).docx"
-    tables = find_table_return_table(r"603259_2018(1).docx",'排放浓度')
-    if len(tables) > 0:
-        word_table_to_excel(tables, f'{output_path}\{file_name}.xlsx')
+
+
+    start = time.perf_counter()
+    task = list(os.listdir(path))
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+
+        results = executor.map(run_2,task)
+        for result in results:
+            print(result)
+    print("多线程",time.perf_counter()-start)
