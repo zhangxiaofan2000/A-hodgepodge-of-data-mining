@@ -45,7 +45,7 @@ def findKeywordGetNextParagraphs(parpas,keyword):
             match1 = pattern.search(para.text)
             if match1 :
                 try:
-                    para_list.append(parpas[i+1])
+                    para_list.append(parpas[i+1].text)
                 except:
                     print("超出索引")
         return para_list
@@ -54,20 +54,21 @@ def findKeywordGetNextParagraphs(parpas,keyword):
 
 import os
 
-def list2txt(lst, name):
-    try:
-        fp = open("{}.txt".format(name), "w")
-        for item in lst:
-            fp.write(item)
-            fp.write("\n")
-    except:
-        return False
-    finally:
-        fp.close()
+def list2txt(lst, name,outputpath):
+  try:
+    txtFile = f"{outputpath}/{name}.txt"
+    with open(txtFile, "w") as file:
+      # Write each item in the list to the file on a new line
+      for item in lst:
+        file.write(str(item) + "\n")
+  except Exception as e:
+    print(str(e))
+    return False
+  finally:
+    file.close()
 
 def set_wd(filepath):
         try:
-            os.chdir(filepath)
             file_list = os.listdir(filepath)
             return file_list
         except:
@@ -76,17 +77,19 @@ def set_wd(filepath):
 
 
 if __name__ == '__main__':
-    filepath="文件路径"
+    filepath=r"G:\proprocess\data\test"
+    outputpath = r"G:\proprocess\data\output"
     keyword="亿"
 
     filelist = set_wd(filepath)
     if filelist!=[] and filelist!=False:
         for file in set_wd(filepath):
             try:
-                paragraphs = getpara(file)
+                filename = filepath+"\\"+file
+                paragraphs = getpara(filename)
                 result = findKeywordGetNextParagraphs(paragraphs,keyword)
-                if(result!=[]):
-                    list2txt(result, file)
+                if(result!=[] and result!=False):
+                    list2txt(result, file,outputpath)
             except Exception as e:
                 print("未知的错误"+ file + str(e) )
 
