@@ -1,17 +1,31 @@
 import wx
 import cv2
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, image as mpimg
 
 
 class MyFrame(wx.Frame):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
-        # Replace the panel with a scrolled window
-        self.scrolled_window = wx.ScrolledWindow(self, -1, style=wx.HSCROLL | wx.VSCROLL)
+        # Create a panel and a sizer
+        panel = wx.Panel(self)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        panel.SetSizer(sizer)
+
+        # Create a scrolled window
+        self.scrolled_window = wx.ScrolledWindow(panel)
+        sizer.Add(self.scrolled_window, 1, wx.EXPAND)
+
+        # Create a button
+        self.button = wx.Button(panel, label="打开图像")
+        sizer.Add(self.button, 0, wx.ALIGN_CENTER)
+
+        # Bind the button to
+        # Bind the button to the OnOpen method
+        self.button.Bind(wx.EVT_BUTTON, self.OnOpen)
+
         # Set the frame properties
         self.SetTitle("O.o")
-
 
         # Create the menu bar
         menu_bar = wx.MenuBar()
@@ -33,38 +47,29 @@ class MyFrame(wx.Frame):
                 return
             path = file_dialog.GetPath()
 
-        # Read the image file using cv2
         img = plt.imread(path)
-        # 改变通道顺序
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-        # Check if the image was successfully read
         if img is None:
-            # Show an error message if the image could not be read
             wx.MessageBox(f"打开文件失败：{path}", "Error", wx.OK | wx.ICON_ERROR)
             return
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-        # Convert the image to a wx.Image
+        _, height = self.scrolled_window.GetSize()
+        width = height * img.shape[1] / img.shape[0]
+
         wx_image = wx.Image(img.shape[1], img.shape[0])
         wx_image.SetData(img.tobytes())
-
-        # Create a bitmap from the image
+        wx_image.Rescale(width,height)
         bitmap = wx_image.ConvertToBitmap()
-        # Set the scrollbars
-        self.scrolled_window.SetScrollbars(1, 1, img.shape[1], img.shape[0])
 
-        # Create a static bitmap and add it to the scrolled window
         static_bitmap = wx.StaticBitmap(self.scrolled_window, -1, bitmap)
-
-        static_bitmap.SetSizeHints(wx_image.GetWidth(), wx_image.GetHeight(),
-                                   wx_image.GetWidth(), wx_image.GetHeight())
-
+        static_bitmap.SetSizeHints(width, height, width, height)
         self.scrolled_window.FitInside()
 
     def OnQuit(self, event):
         self.Close()
-if __name__ == '__main__':
 
+if __name__ == "__main__":
     app = wx.App()
     frame = MyFrame(None)
     screen_width, screen_height = wx.GetDisplaySize()
