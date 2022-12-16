@@ -7,12 +7,11 @@ class MyFrame(wx.Frame):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
-        # Create a panel
-        self.panel = wx.Panel(self)
-
+        # Replace the panel with a scrolled window
+        self.scrolled_window = wx.ScrolledWindow(self, -1, style=wx.HSCROLL | wx.VSCROLL)
         # Set the frame properties
         self.SetTitle("O.o")
-        self.SetSize(800, 600)
+
 
         # Create the menu bar
         menu_bar = wx.MenuBar()
@@ -37,31 +36,39 @@ class MyFrame(wx.Frame):
         # Read the image file using cv2
         img = plt.imread(path)
         # 改变通道顺序
-        image = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
         # Check if the image was successfully read
-        if image is None:
+        if img is None:
             # Show an error message if the image could not be read
             wx.MessageBox(f"打开文件失败：{path}", "Error", wx.OK | wx.ICON_ERROR)
             return
 
         # Convert the image to a wx.Image
-        wx_image = wx.Image(image.shape[1], image.shape[0])
-        wx_image.SetData(image.tobytes())
+        wx_image = wx.Image(img.shape[1], img.shape[0])
+        wx_image.SetData(img.tobytes())
 
-        # Create a bitmap from the image and display it in the panel
+        # Create a bitmap from the image
         bitmap = wx_image.ConvertToBitmap()
-        wx.StaticBitmap(self.panel, -1, bitmap)
-        self.panel.Refresh()
+        # Set the scrollbars
+        self.scrolled_window.SetScrollbars(1, 1, img.shape[1], img.shape[0])
 
-        # Adjust the frame size to fit the image
-        self.SetSize(image.shape[1], image.shape[0])
+        # Create a static bitmap and add it to the scrolled window
+        static_bitmap = wx.StaticBitmap(self.scrolled_window, -1, bitmap)
+
+        static_bitmap.SetSizeHints(wx_image.GetWidth(), wx_image.GetHeight(),
+                                   wx_image.GetWidth(), wx_image.GetHeight())
+
+        self.scrolled_window.FitInside()
 
     def OnQuit(self, event):
         self.Close()
+if __name__ == '__main__':
 
-if __name__ == "__main__":
     app = wx.App()
     frame = MyFrame(None)
+    screen_width, screen_height = wx.GetDisplaySize()
+    frame.SetSize(screen_width, screen_height)
+    frame.SetPosition((0, 0))
     frame.Show()
     app.MainLoop()
