@@ -51,7 +51,19 @@ def findKeywordGetNextParagraphs(parpas,keyword):
         return para_list
     except :
         return False
+def findKeywordGetSection(parpas,keywordlist):
+    try :
+        section_list = list()
+        for i,para in enumerate(parpas) :
 
+            if any(keyword in para.text for keyword in keywordlist ):
+                try:
+                    section_list.append(parpas[i].section)
+                except Exception as e:
+                    print("获取section 错误 "+str(e))
+        return section_list
+    except :
+        return False
 import os
 
 def list2txt(lst, name,outputpath):
@@ -79,19 +91,32 @@ def set_wd(filepath):
 if __name__ == '__main__':
     filepath=r"G:\proprocess\data\test"
     outputpath = r"G:\proprocess\data\output"
-    keyword="亿"
+
+    #放入列表内，允许个关键字
+    keyword_list=["亿"]
 
     filelist = set_wd(filepath)
     if filelist!=[] and filelist!=False:
         for file in set_wd(filepath):
             try:
                 filename = filepath+"\\"+file
-                paragraphs = getpara(filename)
-                result = findKeywordGetNextParagraphs(paragraphs,keyword)
+                result = []
+                docx_temp = docx.Document(filename)
+
+                for section in docx_temp.sections:
+                    for paragraph in section.paragraphs:
+                        print(paragraph.text)
+                        if any(keyword in paragraph.text for keyword in keyword_list):
+                            for paragraph in section.paragraphs:
+                                result.append(paragraph.text)
+                            break
+
+
+
                 if(result!=[] and result!=False):
                     list2txt(result, file,outputpath)
             except Exception as e:
-                print("未知的错误"+ file + str(e) )
+                print("未知的错误"+ file+":" + str(e) )
 
 
 
