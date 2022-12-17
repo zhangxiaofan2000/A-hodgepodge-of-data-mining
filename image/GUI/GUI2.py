@@ -42,27 +42,30 @@ class MyFrame(wx.Frame):
         # # Create a button
         self.Gamma_button = wx.Button(panel, label="幂律操作")
         self.gamma = 2.0
-        self.Gamma_button.Bind(wx.EVT_BUTTON, self.OnGamma)
+        self.Gamma_button.Bind(wx.EVT_BUTTON, self.on_GammaButton_click)
         button_sizer.Add(self.Gamma_button, 0, wx.HORIZONTAL)
         # # Create a button
-        # self.BBBBB = wx.Button(panel, label="平滑滤波")
-        # self.BBBBB.Bind(wx.EVT_BUTTON, self.BBBBB)
-        # button_sizer.Add(self.BBBBB, 0, wx.HORIZONTAL)
+        self.Blur_button = wx.Button(panel, label="平滑滤波")
+        self.Blur_button.Bind(wx.EVT_BUTTON, self.OnBlur)
+        button_sizer.Add(self.Blur_button, 0, wx.HORIZONTAL)
         # # Create a button
-        # self.BBBBB = wx.Button(panel, label="锐化")
-        # self.BBBBB.Bind(wx.EVT_BUTTON, self.BBBBB)
-        # button_sizer.Add(self.BBBBB, 0, wx.HORIZONTAL)
-        #
+
+        self.Laplacian_button = wx.Button(panel, label="锐化")
+        self.Laplacian_button.Bind(wx.EVT_BUTTON, self.OnLaplacian)
+        button_sizer.Add(self.Laplacian_button, 0, wx.HORIZONTAL)
+
         # # Create a button
-        # self.BBBBB = wx.Button(panel, label="裁剪")
-        # self.BBBBB.Bind(wx.EVT_BUTTON, self.BBBBB)
-        # button_sizer.Add(self.BBBBB, 0, wx.HORIZONTAL)
+        self.ImageCut_button = wx.Button(panel, label="图像分割")
+        self.ImageCut_button.Bind(wx.EVT_BUTTON, self.OnImageCut)
+        button_sizer.Add(self.ImageCut_button, 0, wx.HORIZONTAL)
         #
         # # Create a button
         # self.BBBBB = wx.Button(panel, label="伪彩色增强")
         # self.BBBBB.Bind(wx.EVT_BUTTON, self.BBBBB)
         # button_sizer.Add(self.BBBBB, 0, wx.HORIZONTAL)
-
+        self.PseudoColor_button = wx.Button(panel, label="伪彩色增强")
+        self.PseudoColor_button.Bind(wx.EVT_BUTTON, self.OnPseudoColor)
+        button_sizer.Add(self.PseudoColor_button, 0, wx.HORIZONTAL)
 
 
         # Create a scrolled window
@@ -150,6 +153,23 @@ class MyFrame(wx.Frame):
 
         self.SetImageTempToPanel()
         self.scrolled_window.FitInside()
+    def on_GammaButton_click(self, event):
+        # 创建一个文本输入对话框
+        dlg = wx.TextEntryDialog(self, '请输入阈值:', '设置')
+
+        # 显示对话框
+        if dlg.ShowModal() == wx.ID_OK:
+            # 获取文本输入框中的文本
+            text= dlg.GetValue()
+            try:
+                self.gamma = int(text)
+                self.OnGamma(event=None)
+            except:
+                wx.MessageBox(f"请输入正确的阈值：{text}", "Error", wx.OK | wx.ICON_ERROR)
+                return
+
+
+
     def OnGamma(self, event):
         self.scrolled_window.DestroyChildren()
 
@@ -161,9 +181,69 @@ class MyFrame(wx.Frame):
 
         self.SetImageTempToPanel()
         self.scrolled_window.FitInside()
+    def OnBlur(self, event):
+        self.scrolled_window.DestroyChildren()
 
-    def BBBBB(self):
-        pass
+
+        self.image_temp = cv2.blur(self.image, (5, 5))
+        # 进行直方图均衡化
+
+        self.SetImageTempToPanel()
+        self.scrolled_window.FitInside()
+
+    def OnLaplacian(self, event):
+        self.scrolled_window.DestroyChildren()
+
+        self.image_temp = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+        kernLaplace = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]])  # Laplacian kernel
+        self.image_temp = cv2.filter2D(self.image_temp, -1, kernLaplace, borderType=cv2.BORDER_REFLECT)
+
+        self.SetImageTempToPanel()
+        self.scrolled_window.FitInside()
+    def OnImageCut(self, event):
+        self.scrolled_window.DestroyChildren()
+
+        self.image_temp = self.image
+        blurred = cv2.pyrMeanShiftFiltering(self.image_temp, 10, 100)
+        # gray(binary,img)
+        gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
+        # 二值化
+        ret, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        # morphology operation
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        # open
+        nb = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
+        # close
+        sure_bg = cv2.dilate(nb, kernel)
+        # distance transform
+        dist = cv2.distanceTransform(sure_bg, cv2.DIST_L2, 3)
+        dist_output = cv2.normalize(dist, 0, 2.0, cv2.NORM_MINMAX)
+        ret, surface = cv2.threshold(dist, dist.max() * 0.6, 255, cv2.THRESH_BINARY)
+        surface_fg = np.uint8(surface)
+        unkown = cv2.subtract(sure_bg, surface_fg)
+        ret, markers = cv2.connectedComponents(surface_fg)
+        # watershed
+        markers = markers + 1
+        markers[unkown == 255] = 0
+        markers = cv2.watershed(self.image_temp, markers=markers)
+
+        #用 绿色的线分割
+        self.image_temp[markers == -1] = [0, 255, 0]
+
+        self.SetImageTempToPanel()
+        self.scrolled_window.FitInside()
+
+    def OnPseudoColor(self, event):
+        self.scrolled_window.DestroyChildren()
+
+        self.image_temp = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+
+        # Process and display
+        self.image_temp = cv2.applyColorMap(self.image_temp, cv2.COLORMAP_JET)
+        self.image_temp = cv2.cvtColor(self.image_temp, cv2.COLOR_BGR2RGB)
+
+        self.SetImageTempToPanel()
+        self.scrolled_window.FitInside()
     def OnQuit(self, event):
         self.Close()
     def SetwxImageData(self,numpyarray):
