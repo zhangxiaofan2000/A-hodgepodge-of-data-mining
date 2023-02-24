@@ -1,0 +1,5 @@
+git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch image/20000xxx_张三.zip' --prune-empty --tag-name-filter cat -- --all
+git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch DATASET/cifar-10-python.tar.gz' --prune-empty --tag-name-filter cat -- --all
+git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch big-file.jar' --prune-empty --tag-name-filter cat -- --all
+
+
