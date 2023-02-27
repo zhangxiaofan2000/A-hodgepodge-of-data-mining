@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>高德地图示例</title>
+    <style type="text/css">
+      html,body{
+        margin:0;
+        padding:0;
+        width:100%;
+        height:100%;
+        overflow:hidden;
+      }
+      #map{
+        width:100%;
+        height:100%;
+      }
+    </style>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=c2a28f6b377da53dc76f069c1134e348"></script>
+    <script type="text/javascript">
+      var markers = [
+        {position: [107.15376915191015, 23.60034162125315], title: '田东站'},
+        {position: [107.744773, 23.113269], title: '广西隆安2号站'},
+        {position: [107.089159, 23.60452], title: '田东城西站'},
+        {position: [106.580855, 23.333791], title: '广西德保站'},
+        {position: [107.796527, 23.075477], title: '广西隆安站'},
+        {position: [108.40381, 22.49076], title: '广西大塘站'},
+        {position: [108.63832, 21.848835], title: '广西钦州钦南站'},
+        {position: [108.64559, 21.73718], title: '广西钦州港站'},
+        {position: [108.36074, 21.60578], title: '广西防城港站'},
+        {position: [106.82379, 23.7859], title: '广西百色站'},
+        {position: [106.82331, 23.78594], title: '百色百矿站'},
+        {position: [108.387396454317, 22.6317364635343], title: '南宁充电站'},
+        {position: [106.66164115704, 23.8365673294914], title: '百色充电站'},
+];
+
+      var markers2 = [
+          {position: [106.677827, 23.840513], title: '出发地'},
+          {position: [106.677827, 23.840513], title: '目的地'}];
+
+      function initMap() {
+        var map = new AMap.Map('map', {
+          zoom: 10,
+          center: [106.677827, 23.840513]
+        });
+
+        markers.forEach(function(marker) {
+          var markerObj = new AMap.Marker({
+            position: marker.position,
+            title: marker.title,
+            icon: new AMap.Icon({
+              size: new AMap.Size(30, 30),
+              image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png'
+            }),
+            map: map
+          });
+
+          var infoWindow = new AMap.InfoWindow({
+            content: marker.title
+          });
+          markerObj.on('click', function() {
+            infoWindow.open(map, markerObj.getPosition());
+          });
+        });
+
+
+
+        markers2.forEach(function(marker) {
+          var markerObj = new AMap.Marker({
+            position: marker.position,
+            title: marker.title,
+            icon: new AMap.Icon({
+              size: new AMap.Size(30, 30),
+              image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png'
+            }),
+            map: map
+          });
+                    var infoWindow = new AMap.InfoWindow({
+            content: marker.title
+          });
+          markerObj.on('click', function() {
+            infoWindow.open(map, markerObj.getPosition());
+          });
+        });
+
+
+        var startPoint = new AMap.Marker({
+            position: [108.408861,21.681667],
+            map: map,
+            icon: "https://a.amap.com/jsapi_demos/static/images/start.png"
+        });
+
+        var endPoint = new AMap.Marker({
+            position: [106.677827, 23.840513],
+            map: map,
+            icon: "https://a.amap.com/jsapi_demos/static/images/end.png"
+        });
+
+        var path = new AMap.Polyline({
+            path: [[108.408861,21.681667], [106.677827, 23.840513]],
+            strokeColor: "#3366FF",  // 线条颜色
+            strokeOpacity: 1,        // 线条透明度
+            strokeWeight: 5,         // 线条宽度
+            strokeStyle: "solid"     // 线条样式
+        });
+
+        map.add(path);
+
+
+        
+      }
+    </script>
+  </head>
+  <body onload="initMap()">
+    <div id="map"></div>
+  </body>
+</html>
