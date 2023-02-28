@@ -1,0 +1,39 @@
+EGM-200二次供水水质监测微系统.jpg	EGM-200.jpg
+MF-500水质在线监测浮标.jpg	MF-500.jpg
+MPC-800小型水质监测与控制站.jpg	MPC-800.jpg
+MS-300地下管网水质监测微系统.jpg	MS-300.jpg
+MS-500微型水质监测站.jpg	MS-500.jpg
+多参数水质监测仪.jpg	Multi-parameter.jpg
+CLX-300余氯分析仪.jpg	CLX-300.jpg
+TA-300C氨氮在线分析仪.jpg	TA-300C.jpg
+TA-300原位氨氮分析仪.jpg	TA-300.jpg
+TC-300C CODcr在线分析仪.jpg	TC-300CCODcr.jpg
+TM-300C高锰酸盐指数在线分析仪.jpg	TM-300C.jpg
+TM-300原位高锰酸盐指数分析仪.jpg	TM-300.jpg
+TN-300C总氮在线分析仪.jpg	TN-300C.jpg
+TN-300原位总氮分析仪.jpg	TN-300.jpg
+TP-300C总磷在线分析仪.jpg	TP-300C.jpg
+TP-300原位总磷分析仪.jpg	TP-300.jpg
+iMP-300在线多参数自清洁传感器.jpg	iMP-300.jpg
+MPS-400在线多参数自清洁传感器.jpg	MPS-400.jpg
+COD-302 COD传感器.jpg	COD-302COD.jpg
+DDM-206A 电导率传感器.jpg	DDM-206A.jpg
+DDM-406 电导率传感器.jpg	DDM-406.jpg
+NHN-406 铵氮传感器.jpg	NHN-406.jpg
+PHG-206A pH传感器.jpg	PHG-206ApH.jpg
+PHG-406 pH传感器.jpg	PHG-406pH.jpg
+RDO-206A 荧光法溶解氧传感器.jpg	RDO-206A.jpg
+RDO-406 荧光法溶解氧传感器.jpg	RDO-406.jpg
+ZS-206A 浊度传感器.jpg	ZS-206A.jpg
+ZS-406 浊度传感器.jpg	ZS-406.jpg
+MPC-202控制器.jpg	MPC-202.jpg
+智慧检测信息系统.jpg	AISystem.jpg
+软件和APP.jpg	APP.jpg
+EXO-mini 1蓝牙无线传输模块（蓝精灵）.jpg	EXO-mini1.jpg
+iCOD-306 COD传感器.jpg	iCOD-306COD.jpg
+iDO-306 荧光法溶解氧传感器.jpg	iDO-306.jpg
+iEC-306 电导率传感器.jpg	iEC-306.jpg
+iNH-306 铵氮传感器.jpg	iNH-306.jpg
+iPH-306 PH传感器.jpg	iPH-306PH.jpg
+iZS-306 浊度传感器.jpg	iZS-306.jpg
+水下机器人.jpg	UnderwaterRobot.jpg
