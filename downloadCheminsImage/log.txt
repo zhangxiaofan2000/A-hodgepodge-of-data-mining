@@ -29,11 +29,11 @@ ZS-406 浊度传感器.jpg	ZS-406.jpg
 MPC-202控制器.jpg	MPC-202.jpg
 智慧检测信息系统.jpg	AISystem.jpg
 软件和APP.jpg	APP.jpg
-EXO-mini 1蓝牙无线传输模块（蓝精灵）.jpg	EXO-mini1.jpg
+EXO-mini 1蓝牙无线传输模块（蓝精灵）.jpg EXO-mini1.jpg
 iCOD-306 COD传感器.jpg	iCOD-306COD.jpg
-iDO-306 荧光法溶解氧传感器.jpg	iDO-306.jpg
-iEC-306 电导率传感器.jpg	iEC-306.jpg
+iDO-306 荧光法溶解氧传感器.jpg   iDO-306.jpg
+iEC-306 电导率传感器.jpg  iEC-306.jpg
 iNH-306 铵氮传感器.jpg	iNH-306.jpg
-iPH-306 PH传感器.jpg	iPH-306PH.jpg
+iPH-306 PH传感器.jpg   iPH-306PH.jpg
 iZS-306 浊度传感器.jpg	iZS-306.jpg
 水下机器人.jpg	UnderwaterRobot.jpg
